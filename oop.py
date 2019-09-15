@@ -32,6 +32,7 @@ class Employee:
         self.last = None
 
 
+""" 
 # This implicitly calls __init__()
 emp_1 = Employee('Kim', 'Smith')
 
@@ -41,3 +42,4 @@ print(emp_1.email)
 print(emp_1.fullname)
 
 del emp_1.fullname
+ """

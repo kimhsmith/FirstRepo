@@ -1,63 +1,59 @@
 # Python Object-Oriented Programming
 
 
-import datetime
-
-
 class Employee:
 
     # Class variables
-    raise_amount = 1.04
-    num_of_emps = 0
+    raise_amt = 1.04
 
     def __init__(self, first, last, pay):
         # These are class attributes
         self.first = first
         self.last = last
         self.pay = pay
-        self.email = first + '.' + last + '@company.com'
-
-        # Better to call Employee rather than self since this change shouldn't change for each instance
-        Employee.num_of_emps += 1
+        self.email = first + '.' + last + '@email.com'
 
     def fullname(self):
         return '{} {}'.format(self.first, self.last)
 
     def apply_raise(self):
-        self.pay = int(self.pay * Employee.raise_amount)
+        self.pay = int(self.pay * self.raise_amt)
 
-    @classmethod
-    def set_raise_amt(cls, amount):
-        cls.raise_amount = amount
 
-    # This is basically an alternative constructor.
-    @classmethod
-    def from_string(cls, emp_str):
-        first, last, pay = emp_str.split('-')
-        return cls(first, last, pay)
+class Developer(Employee):
+    raise_amt = 1.10
 
-    @staticmethod
-    def is_workday(day):
-        if day.weekday() == 5 or day.weekday() == 6:
-            return False
-        return True
+    def __init__(self, first, last, pay, prog_lang):
+        super().__init__(first, last, pay)
+        self.prog_lang = prog_lang
+
+
+class Manager(Employee):
+
+    def __init__(self, first, last, pay, employees=None):
+        super().__init__(first, last, pay)
+        if employees is None:
+            self.employees = []
+        else:
+            self.employees = employees
+
+    def add_emp(self, emp):
+        if emp not in self.employees:
+            self.employees.append(emp)
+
+    def remove_emp(self, emp):
+        if emp in self.employees:
+            self.employees.remove(emp)
+
+    def print_emps(self):
+        for emp in self.employees:
+            print('-->', emp.fullname())
 
 
 # This implicitly calls __init__()
-emp_1 = Employee('Kim', 'Smith', 50000)
-emp_2 = Employee('John', 'Smyth', 20000)
+dev_1 = Developer('Kim', 'Smith', 50000, 'Python')
+dev_2 = Developer('John', 'Smyth', 20000, 'Java')
 
-Employee.set_raise_amt(1.05)
+mgr_1 = Manager('Sue', 'Smith', 90000, [dev_1])
 
-print(Employee.raise_amount)
-print(emp_1.raise_amount)
-print(emp_2.raise_amount)
-
-emp_str_1 = 'Dylan-Sutton-30000'
-
-new_emp_1 = Employee.from_string(emp_str_1)
-print(new_emp_1.email)
-
-my_date = datetime.date(2016, 7, 11)
-
-print(Employee.is_workday(my_date))
+print(issubclass(Developer, Manager))
